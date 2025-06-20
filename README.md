@@ -65,5 +65,3 @@ It’s like having a gardening journal and reminder system in one — but in API
 
 ---
 
-## 📁 Clean Architecture Layout
-
