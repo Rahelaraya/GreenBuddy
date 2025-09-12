@@ -10,10 +10,10 @@ namespace Application.Interface
     public interface ICareLogRepository
     {
         Task<IEnumerable<CareLogDto>> GetAllAsync();
-       // Task<CareLogDto> GetByIdAsync(int id);  
-        //Task AddAsync(CareLogDto careLogDto);
-        //Task UpdateAsync(CareLogDto careLogDto);
-        //Task DeleteAsync(int id);
+        Task<CareLogDto> GetByIdAsync(int id);  
+        Task AddAsync(CareLogDto careLogDto);
+        Task UpdateAsync(CareLogDto careLogDto);
+        Task DeleteAsync(int id);
 
     }
 }
