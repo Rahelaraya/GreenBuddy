@@ -1,0 +1,62 @@
+---- User Table
+--CREATE TABLE Users (
+--    Id INT PRIMARY KEY,
+--    Username NVARCHAR(50) NOT NULL UNIQUE,
+--    Email NVARCHAR(100) NOT NULL UNIQUE,
+--    PasswordHash NVARCHAR(MAX) NOT NULL,
+--    Role NVARCHAR(20) NOT NULL DEFAULT 'User',
+--    CreatedAt DATETIME2 NOT NULL DEFAULT GETDATE()
+--);
+
+---- Plant Table
+--CREATE TABLE Plants (
+--    Id INT PRIMARY KEY,
+--    PlantName NVARCHAR(100) NOT NULL,
+--    Species NVARCHAR(100),
+--    WaterFrequencyInDays INT NOT NULL,
+--    CreatedAt DATETIME2 NOT NULL DEFAULT GETDATE()
+--);
+
+----  CareTasks
+--CREATE TABLE CareTasks (
+--    Id INT PRIMARY KEY,
+--    PlantId INT NOT NULL,
+--    Type NVARCHAR(50) NOT NULL,
+--    FrequencyInDays INT NOT NULL,
+--    LastDoneAt DATETIME2,
+--    NextDueAt DATETIME2,
+--    FOREIGN KEY (PlantId) REFERENCES Plants(Id)
+--);
+
+----  CareLogs
+--CREATE TABLE CareLogs (
+--    Id INT PRIMARY KEY,
+--    PlantId INT NOT NULL,
+--    TaskType NVARCHAR(50) NOT NULL,
+--    Note NVARCHAR(500),
+--    CompletedAt DATETIME2 NOT NULL DEFAULT GETDATE(),
+--    FOREIGN KEY (PlantId) REFERENCES Plants(Id)
+--);
+----  Users Table (can still exist if needed)
+--INSERT INTO Users (Id, Username, Email, PasswordHash, Role, CreatedAt) VALUES
+--(111, 'john_doe', 'john@example.com', 'hash1', 'User', GETDATE()),
+--(112, 'jane_admin', 'jane@example.com', 'hash2', 'Admin', GETDATE()),
+--(113, 'alice_user', 'alice@example.com', 'hash3', 'User', GETDATE());
+
+----  Plants (no OwnerId now)
+--INSERT INTO Plants (Id, PlantName, Species, WaterFrequencyInDays, CreatedAt) VALUES
+--(221, 'Aloe Vera', 'Aloe barbadensis', 7, GETDATE()),
+--(222, 'Snake Plant', 'Dracaena trifasciata', 14, GETDATE()),
+--(223, 'Spider Plant', 'Chlorophytum comosum', 5, GETDATE());
+
+---- Insert CareTasks
+--INSERT INTO CareTasks (Id, PlantId, Type, FrequencyInDays, LastDoneAt, NextDueAt) VALUES
+--(331, 221, 'Water', 7, DATEADD(DAY, -7, GETDATE()), GETDATE()),
+--(332, 222, 'Fertilize', 30, DATEADD(DAY, -15, GETDATE()), DATEADD(DAY, 15, GETDATE())),
+--(333, 223, 'Water', 5, DATEADD(DAY, -6, GETDATE()), DATEADD(DAY, -1, GETDATE()));
+
+---- Insert CareLogs
+--INSERT INTO CareLogs (Id, PlantId, TaskType, Note, CompletedAt) VALUES
+--(441, 221, 'Water', 'Watered thoroughly', DATEADD(DAY, -7, GETDATE())),
+--(442, 222, 'Fertilize', 'Used organic fertilizer', DATEADD(DAY, -15, GETDATE())),
+--(443, 223, 'Water', 'Soil was still moist, light watering', DATEADD(DAY, -6, GETDATE()));
