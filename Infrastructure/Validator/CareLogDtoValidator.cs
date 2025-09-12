@@ -1,4 +1,5 @@
 ﻿using Application.DTO;
+using Domain.Entities;
 using FluentValidation;
 using System;
 using System.Collections.Generic;
@@ -13,7 +14,7 @@ namespace Infrastructure.Validator
         public CareLogDtoValidator()
         {
             
-            RuleFor(c => c.plantId).GreaterThan(0).WithMessage("plantId must be greater than 0.");
+            RuleFor(c => c.PlantId).GreaterThan(0).WithMessage("plantId must be greater than 0.");
             RuleFor(c => c.TaskType).NotEmpty().WithMessage("TaskType is required.");
             RuleFor(c => c.Note).MaximumLength(500).WithMessage("Note cannot exceed 500 characters.");
             RuleFor(c => c.Date).LessThanOrEqualTo(DateTime.Now).WithMessage("Date cannot be in the future.");
@@ -21,6 +22,5 @@ namespace Infrastructure.Validator
 
         }
     }
-
 
 }

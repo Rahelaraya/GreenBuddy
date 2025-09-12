@@ -21,8 +21,9 @@ namespace API
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
             builder.Services.AddScoped<ICareLogRepository, CareLogRepository>();
+            builder.Services.AddScoped<ICareTasksRepository, CareTasksRepository>();
 
-   
+
 
             builder.Services.AddControllers();
             builder.Services.AddSwaggerGen();
