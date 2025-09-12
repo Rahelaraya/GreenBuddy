@@ -18,24 +18,6 @@ namespace Infrastructure.DataBase
         public DbSet<Plants> Plants { get; set; }
 
         // AppDbContext.cs
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<CareLogs>(entity =>
-            {
-                entity.ToTable("CareLogs", "dbo"); // adjust schema if needed
-                entity.HasKey(e => e.Id);
-
-                // Map the property "Date" in the entity to the actual column name in DB:
-                entity.Property(e => e.Date)
-                      .HasColumnName("LogDate")     // <-- CHANGE THIS to your real column name
-                      .HasColumnType("datetime2")
-                      .IsRequired();
-
-                entity.Property(e => e.Note).HasMaxLength(4000);
-                entity.Property(e => e.TaskType).HasMaxLength(100);
-            });
-        }
-
     }
 
 

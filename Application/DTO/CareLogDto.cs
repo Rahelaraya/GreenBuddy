@@ -11,7 +11,6 @@ namespace Application.DTO
       
          public int Id { get; set; }
          public int PlantId { get; set; }
-
         public string TaskType { get; set; } = string.Empty;
        public string Note { get; set; } = string.Empty;
        public DateTime Date { get; set; }
