@@ -16,6 +16,7 @@ namespace Infrastructure
                 options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
             services.AddScoped<ICareLogRepository, CareLogRepository>();
+            services.AddScoped<ICareTasksRepository, CareTasksRepository>();
             return services;
         }
     }

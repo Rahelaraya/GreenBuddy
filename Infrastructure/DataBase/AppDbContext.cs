@@ -14,6 +14,7 @@ namespace Infrastructure.DataBase
         {
         }
         public DbSet<CareLogs> CareLogs { get; set; }
+        public DbSet<CareTasks> CareTasks { get; set; }
 
         // AppDbContext.cs
         protected override void OnModelCreating(ModelBuilder modelBuilder)
