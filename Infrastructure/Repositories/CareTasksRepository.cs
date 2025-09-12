@@ -63,7 +63,7 @@ namespace Infrastructure.Repositories
             }
             catch (Exception ex)
             {
-                // Log the exception (you can use any logging framework)
+               
                 throw new Exception("An error occurred while adding the care task.", ex);
             }
         }
@@ -85,7 +85,7 @@ namespace Infrastructure.Repositories
             }
             catch (Exception ex)
             {
-                // Log the exception (you can use any logging framework)
+                
                 throw new Exception("An error occurred while updating the care task.", ex);
             }
         }
@@ -104,7 +104,7 @@ namespace Infrastructure.Repositories
             }
             catch (Exception ex)
             {
-                // Log the exception (you can use any logging framework)
+                
                 throw new Exception("An error occurred while deleting the care task.", ex);
             }
         }
