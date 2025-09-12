@@ -17,6 +17,7 @@ namespace Infrastructure
 
             services.AddScoped<ICareLogRepository, CareLogRepository>();
             services.AddScoped<ICareTasksRepository, CareTasksRepository>();
+            services.AddScoped<IPlantsRepository, PlantsRepository>();
             return services;
         }
     }

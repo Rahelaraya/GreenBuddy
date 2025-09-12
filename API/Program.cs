@@ -22,6 +22,7 @@ namespace API
 
             builder.Services.AddScoped<ICareLogRepository, CareLogRepository>();
             builder.Services.AddScoped<ICareTasksRepository, CareTasksRepository>();
+            builder.Services.AddScoped<IPlantsRepository, PlantsRepository>();
 
 
 
