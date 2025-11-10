@@ -49,7 +49,7 @@ jobs:
       - name: Notify Discord
         if: ${{ always() }}
         env:
-          WEBHOOK_RAW: ${{ secrets.YOUR_SECRET_NAME }}   # lägg webhook-URL:en i denna secret
+          WEBHOOK_RAW: ${{ DISCORD_WEBHOOK_URL }}   # lägg webhook-URL:en i denna secret
           STATUS: ${{ job.status }}                      # success | failure | cancelled
         run: |
           # Rensa whitespace och kontrollera prefix
