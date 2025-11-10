@@ -32,3 +32,17 @@ jobs:
         run: echo "Secret exists (maskeras i loggar)"
         env:
           MY_SECRET: ${{ secrets.YOUR_SECRET_NAME }}
+      - name: Publish output
+        run: dotnet publish GreenBuddy.sln -c Release -o ./publish
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: greenbuddy-publish
+          path: ./publish
+
+      - name: Add link to Summary
+        run: |
+          echo "### ✅ Build klar" >> $GITHUB_STEP_SUMMARY
+          echo "Ladda ner artifacts här:" >> $GITHUB_STEP_SUMMARY
+          echo "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" >> $GITHUB_STEP_SUMMARY
