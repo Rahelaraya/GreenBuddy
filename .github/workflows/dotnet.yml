@@ -1,4 +1,4 @@
-name: .NET Build and Test
+name: CI
 
 on:
   push:
@@ -9,7 +9,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - name: Check out code
         uses: actions/checkout@v4
@@ -17,21 +16,25 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0.x'   # Byt till 7.0.x om du använder .NET 7
+          dotnet-version: '8.0.x'
 
       - name: Restore dependencies
         run: dotnet restore GreenBuddy.sln
 
       - name: Build
-        run: dotnet build GreenBuddy.sln --no-restore --configuration Release
+        run: dotnet build GreenBuddy.sln --no-restore -c Release
 
       - name: Run tests
         run: dotnet test GreenBuddy.sln --no-build --verbosity normal
 
-      - name: Example using secret
-        run: echo "Secret exists (maskeras i loggar)"
+      # 👇 Här används din secret
+      - name: Use my secret
+        run: |
+          echo "Min secret är tillgänglig i denna miljö (men döljs i loggar)."
+          echo "Secret length: ${#MY_SECRET}"
         env:
           MY_SECRET: ${{ secrets.YOUR_SECRET_NAME }}
+
       - name: Publish output
         run: dotnet publish GreenBuddy.sln -c Release -o ./publish
 
@@ -40,9 +43,3 @@ jobs:
         with:
           name: greenbuddy-publish
           path: ./publish
-
-      - name: Add link to Summary
-        run: |
-          echo "### ✅ Build klar" >> $GITHUB_STEP_SUMMARY
-          echo "Ladda ner artifacts här:" >> $GITHUB_STEP_SUMMARY
-          echo "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" >> $GITHUB_STEP_SUMMARY
