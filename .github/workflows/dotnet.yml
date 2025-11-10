@@ -43,3 +43,26 @@ jobs:
         with:
           name: greenbuddy-publish
           path: ./publish
+                # ✅ Skicka notis till Discord vid lyckad körning
+      - name: Notify Discord (success)
+        if: ${{ success() }}   # kör bara om jobbet gick igenom
+        env:
+          WEBHOOK: ${{ secrets.YOUR_SECRET_NAME }}  # din Discord webhook-URL
+        run: |
+          MSG="✅ GreenBuddy CI passerade på branch $GITHUB_REF_NAME
+          👉 Run: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+          # JSON utan jq
+          PAYLOAD=$(printf '{"content": "%s"}' "$(echo "$MSG" | sed ':a;N;$!ba;s/\n/\\n/g')")
+          curl -sS -H "Content-Type: application/json" -X POST -d "$PAYLOAD" "$WEBHOOK"
+
+      # ❌ Skicka notis om något fallerar (valfritt men bra)
+      - name: Notify Discord (failure)
+        if: ${{ failure() }}
+        env:
+          WEBHOOK: ${{ secrets.YOUR_SECRET_NAME }}
+        run: |
+          MSG="❌ GreenBuddy CI failade på branch $GITHUB_REF_NAME
+          🔎 Run: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+          PAYLOAD=$(printf '{"content": "%s"}' "$(echo "$MSG" | sed ':a;N;$!ba;s/\n/\\n/g')")
+          curl -sS -H "Content-Type: application/json" -X POST -d "$PAYLOAD" "$WEBHOOK"
+
