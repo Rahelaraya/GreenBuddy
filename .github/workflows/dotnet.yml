@@ -47,24 +47,21 @@ jobs:
 
       # 🔔 Discord-notis – körs alltid
       - name: Notify Discord
-        if: ${{ always() }}
+        if: ${{ always() && github.event_name == 'push' }}
         env:
-          WEBHOOK_RAW: ${{ secrets.DISCORD_WEBHOOK_URL }}   # <- rätt!
-          STATUS: ${{ job.status }}                         # success | failure | cancelled
+          WEBHOOK_RAW: ${{ secrets.DISCORD_WEBHOOK_URL }}
         run: |
+          # Rensa ev. whitespace i webhook
           WEBHOOK="$(printf "%s" "$WEBHOOK_RAW" | tr -d ' \t\r\n')"
-          case "$WEBHOOK" in
-            https://discord.com/api/webhooks/*) ;; 
-            *) echo "Webhook ser ogiltig ut. Måste börja med https://discord.com/api/webhooks/"; exit 1 ;;
-          esac
 
-          if [ "$STATUS" = "success" ]; then
-            MSG="✅ GreenBuddy CI passerade på branch $GITHUB_REF_NAME
-          👉 Run: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
-          else
-            MSG="❌ GreenBuddy CI $STATUS på branch $GITHUB_REF_NAME
-          🔎 Run: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
-          fi
+          # Data från GitHub
+          BRANCH="$GITHUB_REF_NAME"           # t.ex. master eller main
+          ACTOR_LC="${GITHUB_ACTOR,,}"        # användarnamnet i lowercase (rahel)
+          RUN_URL="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
 
+          # Meddelande
+          MSG="New push to ${BRANCH} by ${ACTOR_LC}\n🔗 ${RUN_URL}"
+
+          # Skicka till Discord
           PAYLOAD=$(printf '{"content":"%s"}' "$(echo "$MSG" | sed ':a;N;$!ba;s/\n/\\n/g')")
           curl -sS -H "Content-Type: application/json" -X POST -d "$PAYLOAD" "$WEBHOOK"
