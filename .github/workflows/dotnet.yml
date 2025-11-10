@@ -28,10 +28,10 @@ jobs:
       - name: Run tests
         run: dotnet test GreenBuddy.sln --no-build --verbosity normal
 
-      # Exempel: använd din secret
+      # (valfritt) demo att läsa en secret
       - name: Use my secret
         run: |
-          echo "Min secret är tillgänglig i denna miljö (värdet maskeras i loggar)."
+          echo "Min secret är tillgänglig (maskeras i loggar)."
           echo "Secret length: ${#MY_SECRET}"
         env:
           MY_SECRET: ${{ secrets.YOUR_SECRET_NAME }}
@@ -45,21 +45,17 @@ jobs:
           name: greenbuddy-publish
           path: ./publish
 
-      # 🔔 Discord-notis – körs alltid, och skickar olika text beroende på status
+      # 🔔 Discord-notis – körs alltid
       - name: Notify Discord
         if: ${{ always() }}
         env:
-          WEBHOOK_RAW: ${{ DISCORD_WEBHOOK_URL }}   # lägg webhook-URL:en i denna secret
-          STATUS: ${{ job.status }}                      # success | failure | cancelled
+          WEBHOOK_RAW: ${{ secrets.DISCORD_WEBHOOK_URL }}   # <- rätt!
+          STATUS: ${{ job.status }}                         # success | failure | cancelled
         run: |
-          # Rensa whitespace och kontrollera prefix
           WEBHOOK="$(printf "%s" "$WEBHOOK_RAW" | tr -d ' \t\r\n')"
           case "$WEBHOOK" in
-            https://discord.com/api/webhooks/*) ;;  # ok
-            *)
-              echo "Webhook ser ogiltig ut. Måste börja med https://discord.com/api/webhooks/"
-              exit 1
-              ;;
+            https://discord.com/api/webhooks/*) ;; 
+            *) echo "Webhook ser ogiltig ut. Måste börja med https://discord.com/api/webhooks/"; exit 1 ;;
           esac
 
           if [ "$STATUS" = "success" ]; then
