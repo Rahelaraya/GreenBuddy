@@ -45,13 +45,21 @@ jobs:
           name: greenbuddy-publish
           path: ./publish
 
-      # 🔔 Discord-notis – körs ALLTID och visar rätt status
-      - name: Notify Discord
+          - name: Notify Discord
         if: ${{ always() }}
         env:
-          WEBHOOK: ${{ secrets.YOUR_SECRET_NAME }} # Lägg webhook-URL:en i denna secret
-          STATUS: ${{ job.status }} # success | failure | cancelled
+          WEBHOOK_RAW: ${{ secrets.YOUR_SECRET_NAME }} # eller secrets.DISCORD_WEBHOOK_URL
+          STATUS: ${{ job.status }}
         run: |
+          # Rensa whitespace och kontrollera prefix
+          WEBHOOK="$(printf "%s" "$WEBHOOK_RAW" | tr -d ' \t\r\n')"
+          case "$WEBHOOK" in
+            https://discord.com/api/webhooks/*) ;;
+            *)  echo "Webhook ser ogiltig ut. Kontrollera att secret är en riktig Discord-webhook-URL."
+                echo "Tips: Den måste börja med https://discord.com/api/webhooks/"
+                exit 1 ;;
+          esac
+
           if [ "$STATUS" = "success" ]; then
             MSG="✅ GreenBuddy CI passerade på branch $GITHUB_REF_NAME
           👉 Run: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
@@ -60,7 +68,5 @@ jobs:
           🔎 Run: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
           fi
 
-          # Gör säker JSON (escape:a radbrytningar)
           PAYLOAD=$(printf '{"content":"%s"}' "$(echo "$MSG" | sed ':a;N;$!ba;s/\n/\\n/g')")
-
           curl -sS -H "Content-Type: application/json" -X POST -d "$PAYLOAD" "$WEBHOOK"
