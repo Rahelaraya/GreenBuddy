@@ -1,0 +1,34 @@
+name: .NET Build and Test
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'   # Byt till 7.0.x om du använder .NET 7
+
+      - name: Restore dependencies
+        run: dotnet restore GreenBuddy.sln
+
+      - name: Build
+        run: dotnet build GreenBuddy.sln --no-restore --configuration Release
+
+      - name: Run tests
+        run: dotnet test GreenBuddy.sln --no-build --verbosity normal
+
+      - name: Example using secret
+        run: echo "Secret exists (maskeras i loggar)"
+        env:
+          MY_SECRET: ${{ secrets.YOUR_SECRET_NAME }}
